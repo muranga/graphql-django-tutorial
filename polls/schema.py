@@ -1,16 +1,16 @@
 from graphene_django import DjangoObjectType
 import graphene
-from polls.models import Question as QuestionModel
+from polls.models import Question
 
-class Question(DjangoObjectType):
+class QuestionType(DjangoObjectType):
     class Meta:
-        model = QuestionModel
+        model = Question
 
 class Query(graphene.ObjectType):
-    questions = graphene.List(Question)
+    questions = graphene.List(QuestionType)
 
     @graphene.resolve_only_args
     def resolve_questions(self):
-        return QuestionModel.objects.all()
+        return Question.objects.all()
 
 schema = graphene.Schema(query=Query)
