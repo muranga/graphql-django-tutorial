@@ -1,7 +1,7 @@
 from graphene_django import DjangoObjectType
 import graphene
-import datetime
 from polls.models import Question
+from django.utils import timezone
 
 class QuestionType(DjangoObjectType):
     class Meta:
@@ -23,7 +23,7 @@ class NewQuestion(graphene.relay.ClientIDMutation):
     @classmethod
     def mutate_and_get_payload(cls, input, context, info):
         question_text = input.get("question_text")
-        question = Question.objects.create(question_text=question_text, pub_date=datetime.datetime.now())
+        question = Question.objects.create(question_text=question_text, pub_date=timezone.now())
         return NewQuestion(question=question)
 
 class Mutation(graphene.ObjectType):
