@@ -3,6 +3,7 @@ import graphene
 from polls.models import Question
 from django.utils import timezone
 
+
 class QuestionType(DjangoObjectType):
     class Meta:
         model = Question
@@ -14,17 +15,18 @@ class Query(graphene.ObjectType):
     def resolve_questions(self):
         return Question.objects.all()
 
-class NewQuestion(graphene.relay.ClientIDMutation):
+
+class NewQuestion(graphene.Mutation):
     class Input:
         question_text = graphene.String(required=True)
-
     question = graphene.Field(QuestionType)
 
     @classmethod
-    def mutate_and_get_payload(cls, input, context, info):
-        question_text = input.get("question_text")
+    def mutate(cls, root, args, context, info):
+        question_text = args.get("question_text")
         question = Question.objects.create(question_text=question_text, pub_date=timezone.now())
         return NewQuestion(question=question)
+
 
 class Mutation(graphene.ObjectType):
     new_question = NewQuestion.Field()
