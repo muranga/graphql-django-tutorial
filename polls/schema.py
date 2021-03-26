@@ -22,8 +22,7 @@ class NewQuestion(graphene.Mutation):
     question = graphene.Field(QuestionType)
 
     @classmethod
-    def mutate(cls, root, args, context, info):
-        question_text = args.get("question_text")
+    def mutate(cls, root, info, question_text):
         question = Question.objects.create(question_text=question_text, pub_date=timezone.now())
         return NewQuestion(question=question)
 
